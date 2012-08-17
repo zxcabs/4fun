@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<script type="text/javascript" src="multikeypress.js"></script>	
+	</head>
+	<body>
+		<div id="log"></div>
+		
+		<script type='text/javascript'>
+			function getById(id) {
+				return document.getElementById(id);
+			}
+			
+			function makeLog(el) {
+				var c = 0;
+				return function (str) {
+					c += 1;
+					el.innerText = c + ' - ' + str;
+				};
+			}
+			
+			var log, multikey,
+				LEFT = 65, UP = 87, RIGTH = 68, DOWN = 83, FIRE = 32;
+				
+			log = makeLog(getById('log'));
+			multikey = new Multikeypress();
+				
+			multikey.onkeyspress = function (events) {
+				var s = [];
+				
+				if (events[LEFT]) {
+					s.push('left');
+				}
+				
+				if (events[UP]) {
+					s.push('up');
+				}
+				
+				if (events[RIGTH]) {
+					s.push('rigth');
+				}
+				
+				if (events[DOWN]) {
+					s.push('down');
+				}
+				
+				if (events[FIRE]) {
+					s.push('fire');
+				}
+				
+				log(s.join(' + '));
+			};
+		</script>
+	</body>
+</html>
