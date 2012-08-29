@@ -22,12 +22,18 @@ namespace('Canvas', function () {
 		this.height = opt.height || defaultHeight;
 		
 		this.canvas = createCanvas(this.width, this.height);
-		this.ctx = this.canvas.getContext('2d');
 		
-		this.el.appendChild(this.canvas);
-		
+		this.el.appendChild(this.canvas);		
 	}
 	
+	Canvas.prototype.getContext2d = function () {
+		
+		if (!this._ctx) {
+			this._ctx = this.canvas.getContext('2d');
+		}
+		
+		return this._ctx;
+	};
 	
 	return Canvas;
 });
