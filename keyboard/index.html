@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<script src="../utils/namespace.js" type="text/javascript"></script>
 		<script type="text/javascript" src="multikeypress.js"></script>	
 	</head>
 	<body>
@@ -18,7 +19,8 @@
 				};
 			}
 			
-			var log, multikey,
+			var Multikeypress = namespace('Multikeypress'),
+				log, multikey,
 				LEFT = 65, UP = 87, RIGTH = 68, DOWN = 83, FIRE = 32;
 				
 			log = makeLog(getById('log'));

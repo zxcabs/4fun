@@ -1,4 +1,4 @@
-Multikeypress = (function () {
+namespace('Multikeypress', function () {
 	function __foo(){};
 	
 	function onkeydown(obj) {
@@ -68,4 +68,4 @@ Multikeypress = (function () {
 	Multikeypress.prototype.onkeyspress = __foo;
 	
 	return Multikeypress;
-}());
+});
