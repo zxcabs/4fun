@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="../utils/namespace.js" type="text/javascript"></script>
+		<script src="../utils/index.js" type="text/javascript"></script>
+		<script src="../canvas/canvas.js" type="text/javascript"></script>
+		<script src="../canvas/point.js" type="text/javascript"></script>
+		<script src="../canvas/circle.js" type="text/javascript"></script>
+		<script src="../keyboard/multikeypress.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="scene" style="border: 1px solid; width: 800px; height: 600px;"></div>
+		<script type="text/javascript">
+			var Canvas = namespace('Canvas'),
+				Circle = namespace('Circle'),
+				Multikeypress = namespace('Multikeypress');
+				
+			var canvas = new Canvas({ el: document.getElementById('scene'), width: 800, height: 600 }),
+				ctx = canvas.getContext2d(),
+				circle = new Circle({ x: 50, y: 50, r: 20, fillStyle: 'red' }),
+				dxy = 5,
+				keyboard = new Multikeypress(),
+				LEFT = 65, UP = 87, RIGTH = 68, DOWN = 83;
+			
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				circle.draw(ctx);
+			}
+			
+			function move() {
+				var events = keyboard._keys, //смотрим текущие нажатые кнопки
+					dx = 0, dy = 0;
+				
+				if (events[LEFT]) {
+					dx -= dxy;
+				}
+				
+				if (events[RIGTH]) {
+					dx += dxy;
+				}
+				
+				if (events[UP]) {
+					dy -= dxy;
+				}
+				
+				if (events[DOWN]) {
+					dy += dxy;
+				}
+				
+				circle.x += dx;
+				circle.y += dy;
+			}
+			
+			function loop() {
+				move();
+				draw();
+				
+				window.webkitRequestAnimationFrame(loop);
+			}
+			
+			loop();
+		</script>
+	</body>
+</html>
