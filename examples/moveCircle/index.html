@@ -5,6 +5,7 @@
 		<script src="../../lib/utils/index.js" type="text/javascript"></script>
 		<script src="../../lib/canvas.js" type="text/javascript"></script>
 		<script src="../../lib/point.js" type="text/javascript"></script>
+		<script src="../../lib/dot.js" type="text/javascript"></script>
 		<script src="../../lib/circle.js" type="text/javascript"></script>
 		<script src="../../lib/multikeypress.js" type="text/javascript"></script>
 	</head>
@@ -47,8 +48,8 @@
 					dy += dxy;
 				}
 				
-				circle.x += dx;
-				circle.y += dy;
+				circle.center.x += dx;
+				circle.center.y += dy;
 			}
 			
 			function loop() {
