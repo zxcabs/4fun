@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="../../lib/utils/namespace.js" type="text/javascript"></script>
+		<script src="../../lib/utils/index.js" type="text/javascript"></script>
+		<script src="../../lib/canvas.js" type="text/javascript"></script>
+		<script src="../../lib/point.js" type="text/javascript"></script>
+		<script src="../../lib/box.js" type="text/javascript"></script>
+		<script src="../../lib/multikeypress.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="scene" style="border: 1px solid; width: 800px; height: 600px;"></div>
+		<script type="text/javascript">
+			var Canvas = namespace('Canvas'),
+				Box = namespace('Box'),
+				Multikeypress = namespace('Multikeypress');
+				
+			var canvas = new Canvas({ el: document.getElementById('scene'), width: 800, height: 600 }),
+				ctx = canvas.getContext2d(),
+				box = new Box({ x: 50, y: 50, w: 40, h: 20, fillStyle: 'red' }),
+				box2 = new Box({ x: 200, y: 50, w: 40, h: 20, rot: 1, fillStyle: 'blue' }),
+				dxy = 5,
+				drot = 0.1;
+				keyboard = new Multikeypress(),
+				LEFT = 65, UP = 87, RIGTH = 68, DOWN = 83;
+			
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				box.draw(ctx);
+				box2.draw(ctx);
+			}
+			
+			function move() {
+				var events = keyboard._keys,
+					dr1 = 0,
+					dr2 = 0;
+				
+				if (events[LEFT]) {
+					dr1 -= drot;
+				}
+				
+				if (events[RIGTH]) {
+					dr1 += drot;
+				}
+				
+				if (events[UP]) {
+					dr2 -= drot;
+				}
+				
+				if (events[DOWN]) {
+					dr2 += drot;
+				}
+
+				box.rot += dr1;
+				box2.rot += dr2;
+			}
+			
+			function loop() {
+				move();
+				draw();
+				
+				window.webkitRequestAnimationFrame(loop);
+			}
+			
+			loop();
+		</script>
+	</body>
+</html>
