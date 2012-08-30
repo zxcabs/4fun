@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="../../lib/utils/namespace.js" type="text/javascript"></script>
+		<script src="../../lib/utils/index.js" type="text/javascript"></script>
+		<script src="../../lib/canvas.js" type="text/javascript"></script>
+		<script src="../../lib/point.js" type="text/javascript"></script>
+		<script src="../../lib/dot.js" type="text/javascript"></script>
+		<script src="../../lib/polygon.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="scene" style="border: 1px solid; width: 800px; height: 600px;"></div>
+		<script type="text/javascript">
+			var Canvas = namespace('Canvas'),
+				Polygon = namespace('Polygon');
+				
+			var canvas = new Canvas({ el: document.getElementById('scene'), width: 800, height: 600 }),
+				ctx = canvas.getContext2d(),
+				polygon = new Polygon({
+					x: 50, y: 50, 
+					points: [{ x: -20, y: 20 }, { x: 0, y: -20 }, { x: 20, y: 20 }, { x: 0, y: 10 }], 
+					fillStyle: 'red' 
+				});
+				
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				polygon.draw(ctx);
+			}
+			
+			function loop() {
+				draw();
+				
+				window.webkitRequestAnimationFrame(loop);
+			}
+			
+			loop();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="../../lib/utils/namespace.js" type="text/javascript"></script>
+		<script src="../../lib/utils/index.js" type="text/javascript"></script>
+		<script src="../../lib/canvas.js" type="text/javascript"></script>
+		<script src="../../lib/point.js" type="text/javascript"></script>
+		<script src="../../lib/dot.js" type="text/javascript"></script>
+		<script src="../../lib/polygon.js" type="text/javascript"></script>
+		<script src="../../lib/Box.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="scene" style="border: 1px solid; width: 800px; height: 600px;"></div>
+		<script type="text/javascript">
+			var Canvas = namespace('Canvas'),
+				Polygon = namespace('Polygon'),
+				Box = namespace('Box');
+				
+			var canvas = new Canvas({ el: document.getElementById('scene'), width: 800, height: 600 }),
+				ctx = canvas.getContext2d(),
+				box = new Box({ x: 400, y: 400, w: 90, h: 125 }),
+				polygon = new Polygon({
+					x: 200, y: 200, 
+					points: [{ x: -40, y: 40 }, { x: 0, y: -40 }, { x: 40, y: 40 }, { x: 0, y: 20 }], 
+					fillStyle: 'red' 
+				});
+				
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				polygon.draw(ctx);
+				box.draw(ctx);
+			}
+			
+			function loop() {
+				//rotate
+				polygon.rot += 0.05;
+				draw();
+				
+				window.webkitRequestAnimationFrame(loop);
+			}
+			
+			loop();
+		</script>
+	</body>
+</html>
