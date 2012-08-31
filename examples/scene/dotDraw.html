@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="../../lib/utils/namespace.js" type="text/javascript"></script>
+		<script src="../../lib/utils/index.js" type="text/javascript"></script>
+		<script src="../../lib/app.js" type="text/javascript"></script>
+		<script src="../../lib/canvas.js" type="text/javascript"></script>
+		<script src="../../lib/point.js" type="text/javascript"></script>
+		<script src="../../lib/dot.js" type="text/javascript"></script>
+		<script src="../../lib/scene.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="scene" style="border: 1px solid; width: 800px; height: 600px;"></div>
+		<script type="text/javascript">
+			var utils = namespace('utils'),
+				Canvas = namespace('Canvas'),
+				Scene = namespace('Scene'),
+				Dot = namespace('Dot'),
+				App = namespace('App');
+				
+			function Game(opt) {
+				this.constructor.super_.apply(this, arguments);
+				
+				this.canvas = new Canvas({ el: document.getElementById('scene'), width: 800, height: 600 });
+				this.mainScene = new Scene({ canvas: this.canvas });
+				
+				//add random dor
+				function addRandomDot() {
+					this.mainScene.addDot(new Dot({ 
+											x: (Math.random() * this.canvas.width | 0),
+											y: (Math.random() * this.canvas.height | 0),
+											fillStyle: 'rgb(' + 
+														(Math.random() * 256 | 0) + ',' +
+														(Math.random() * 256 | 0) + ',' +
+														(Math.random() * 256 | 0) +
+														')'
+										}));
+				}
+				
+				setInterval(addRandomDot.bind(this), 1000);
+			}
+			
+			utils.inherits(Game, App);
+			
+			Game.prototype.loop = function (dt) {
+				this.mainScene.move(dt);
+				this.mainScene.draw(dt);
+			};
+			
+			
+			new Game();
+		</script>
+	</body>
+</html>
