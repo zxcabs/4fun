@@ -9,7 +9,8 @@ var db = {
 		users: [ 
 			{ id: 0, name: 'Jo', age: 20, sex: 'm' },
 			{ id: 1, name: 'Bo', age: 19, sex: 'm' },
-			{ id: 2, name: 'Le', age: 18, sex: 'w' }
+			{ id: 2, name: 'Le', age: 18, sex: 'w' },
+			{ id: 10, name: 'NotFound', age: 18, sex: 'w' }
 		],
 		titles: {
 			'/users': 'Список пользователей',
@@ -44,12 +45,19 @@ app.use(function replaceRender(req, res, next) {
 		view = /^\/.+/.test(req.path) ? req.path.substr(1).split('/'): [];
 		
 	res.render = function(v, o) {
+		var data,
+			title = res.locals.title;
+		
 		res.render = render;
-		
-		var data;
-		
-		if ('string' === typeof v) {	
-			view = view.concat(v.split('/'));
+		res.locals.title = app.get('title') + (title ? ' - ' + title: '');
+				
+		if ('string' === typeof v) {
+			if (/^\/.+/.test(v)) {
+				view = v.substr(1).split('/');
+			} else {
+				view = view.concat(v.split('/'));
+			}
+			
 			data = o;
 		} else {
 			data = v;
@@ -70,13 +78,27 @@ app.use(function replaceRender(req, res, next) {
 });
 //Загружаем заголовок страници
 app.use(function loadPageTitle(req, res, next) {
-	var pageTitle = db.titles[req.path];
-	res.locals.title = app.get('title') + (pageTitle ? ' - ' + pageTitle: '');
+	res.locals.title = db.titles[req.path];
 	next();
 });
 
 app.use(app.router);
+app.use(function (req, res, next) {
+	next('not found');
+});
+
+//error
+app.use(function (err, req, res, next) {
+	if (/not found/i.test(err)) {
+		res.locals.title = 'Не найдено :(';
+		res.render('/errors/notfound');
+	} else {
+		res.locals.title = 'Ошибка';
+		res.render('/errors/error');
+	}
+});
 app.use(express.errorHandler());
+
 
 //routes
 app.get('/', function(req, res){
@@ -88,9 +110,15 @@ app.get('/users', function(req, res){
 	res.render('index', data);
 });
 
-app.get('/users/profile', function(req, res){
-	var data = { user: db.users[req.query.id] };
-	res.render(data);
+app.get('/users/profile', function(req, res, next){
+	var user = db.users[req.query.id],
+		data = { user: user };
+	
+	if (user) {
+		res.render(data);
+	} else {
+		next('Not found');
+	}
 });
 
 
@@ -110,7 +138,9 @@ app.get('/templates', function(req, res) {
 	var str = 'var views = { '
 			+	'"index": (function(){ return ' + loadTemplate('/index.jade')  + ' }()),'
 			+	'"users.index": (function(){ return ' + loadTemplate('/users/index.jade')  + ' }()),'
-			+	'"users.profile": (function(){ return ' + loadTemplate('/users/profile.jade')  + ' }())'
+			+	'"users.profile": (function(){ return ' + loadTemplate('/users/profile.jade')  + ' }()),'
+			+	'"errors.error": (function(){ return ' + loadTemplate('/errors/error.jade')  + ' }()),'
+			+	'"errors.notfound": (function(){ return ' + loadTemplate('/errors/notfound.jade')  + ' }())'
 			+ '};'
 
 	res.set({ 'Content-type': 'text/javascript' }).status(200).send(str);
