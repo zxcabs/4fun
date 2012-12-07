@@ -30,6 +30,6 @@ $(function () {
 		
 		//init
 		initState = $('body').data('init');
-		History.replaceState(initState, initState.data, location.pathname);
+		History.replaceState(initState, initState.data.title, location.pathname);
 	}
 });
