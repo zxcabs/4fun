@@ -28,7 +28,7 @@ app.use(function replaceRender(req, res, next) {
 		}
 		
 		if (req.xhr) {
-			res.json({ data: data, view: view.join('.') });
+			res.json({ title: res.locals.title , data: data, view: view.join('.') });
 		} else {
 			view[view.length - 1] = '_' + view[view.length - 1];
 			res.render(view.join('/'), data);
@@ -37,6 +37,12 @@ app.use(function replaceRender(req, res, next) {
 	
 	next();
 });
+
+app.use(function loadPageTitle(req, res, next) {
+	res.locals.title = 'asdasd';
+	next();
+});
+
 app.use(app.router);
 app.use(express.errorHandler());
 
