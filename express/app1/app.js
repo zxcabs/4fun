@@ -3,17 +3,45 @@ var express = require('express'),
 	fs = require('fs'),
 	app = express(),
 	viewOptions = { compileDebug: false, self: true };
+
+//data
+var db = {
+		users: [ 
+			{ id: 0, name: 'Jo', age: 20, sex: 'm' },
+			{ id: 1, name: 'Bo', age: 19, sex: 'm' },
+			{ id: 2, name: 'Le', age: 18, sex: 'w' }
+		],
+		titles: {
+			'/users': 'Список пользователей',
+			'/users/profile': 'Профиль пользователя'
+		}
+	};
+
+//utils
+function merge(a, b) {
+	var key;
+	
+	if (a && b) {
+		for (key in b) {
+			a[key] = b[key];
+		}
+	}
+	
+	return a;
+}
 	
 //App settings	
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.set('title', 'Мой сайт');
 app.locals.compileDebug = viewOptions.compileDebug;
 app.locals.self = viewOptions.self;
 
 app.use(express.static(__dirname + '/public'));
+//Заменяем рендер
 app.use(function replaceRender(req, res, next) {
 	var render = res.render,
-		view = req.path.substr(1).split('/');
+		view = /^\/.+/.test(req.path) ? req.path.substr(1).split('/'): [];
 		
 	res.render = function(v, o) {
 		res.render = render;
@@ -27,9 +55,12 @@ app.use(function replaceRender(req, res, next) {
 			data = v;
 		}
 		
+		data = merge(data || {}, res.locals);
+		
 		if (req.xhr) {
-			res.json({ title: res.locals.title , data: data, view: view.join('.') });
+			res.json({ data: data, view: view.join('.') });
 		} else {
+			data.state = JSON.stringify({ data: data, view: view.join('.') });
 			view[view.length - 1] = '_' + view[view.length - 1];
 			res.render(view.join('/'), data);
 		}
@@ -37,34 +68,28 @@ app.use(function replaceRender(req, res, next) {
 	
 	next();
 });
-
+//Загружаем заголовок страници
 app.use(function loadPageTitle(req, res, next) {
-	res.locals.title = 'asdasd';
+	var pageTitle = db.titles[req.path];
+	res.locals.title = app.get('title') + (pageTitle ? ' - ' + pageTitle: '');
 	next();
 });
 
 app.use(app.router);
 app.use(express.errorHandler());
 
-//data
-var users = [ 
-		{ id: 0, name: 'Jo', age: 20, sex: 'm' },
-		{ id: 1, name: 'Bo', age: 19, sex: 'm' },
-		{ id: 2, name: 'Le', age: 18, sex: 'w' }
-	];
-
 //routes
 app.get('/', function(req, res){
-	res.redirect('/users');
+	res.render('index');
 });
 
 app.get('/users', function(req, res){
-	var data = { users: users };
+	var data = { users: db.users };
 	res.render('index', data);
 });
 
 app.get('/users/profile', function(req, res){
-	var data = { user: users[req.query.id] };
+	var data = { user: db.users[req.query.id] };
 	res.render(data);
 });
 
@@ -83,6 +108,7 @@ function loadTemplate(viewpath) {
 app.get('/templates', function(req, res) {
 	
 	var str = 'var views = { '
+			+	'"index": (function(){ return ' + loadTemplate('/index.jade')  + ' }()),'
 			+	'"users.index": (function(){ return ' + loadTemplate('/users/index.jade')  + ' }()),'
 			+	'"users.profile": (function(){ return ' + loadTemplate('/users/profile.jade')  + ' }())'
 			+ '};'

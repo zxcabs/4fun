@@ -6,7 +6,8 @@ var render = (function () {
 
 
 $(function () {
-	var isSupport = ($.browser.msi && /^[\d]{2,}[\d\.]+$/.test($.browser.version)) || $.browser.webkit || $.browser.mozilla;
+	var isSupport = ($.browser.msi && /^[\d]{2,}[\d\.]+$/.test($.browser.version)) || $.browser.webkit || $.browser.mozilla,
+		initState;
 	
 	if (isSupport) {
 		$('a').live('click', function () {
@@ -14,7 +15,7 @@ $(function () {
 				href = el.attr('href');
 			
 			$.get(href, function(result) {
-				History.pushState(result, '', href)
+				History.pushState(result, result.data.title, href);
 			}, 'json');
 			
 			return false;
@@ -26,5 +27,9 @@ $(function () {
 				obj = state.data;
 			render(obj.view, obj.data);
 		});
+		
+		//init
+		initState = $('body').data('init');
+		History.replaceState(initState, initState.data, location.pathname);
 	}
 });
