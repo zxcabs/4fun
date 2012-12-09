@@ -37,51 +37,7 @@ app.set('view engine', 'jade');
 app.set('title', 'Мой сайт');
 app.locals.compileDebug = viewOptions.compileDebug;
 app.locals.self = viewOptions.self;
-
 app.use(express.static(__dirname + '/public'));
-//Заменяем рендер
-app.use(function replaceRender(req, res, next) {
-	var render = res.render,
-		view = /^\/.+/.test(req.path) ? req.path.substr(1).split('/'): [];
-		
-	res.render = function(v, o) {
-		var data,
-			title = res.locals.title;
-		
-		res.render = render;
-		res.locals.title = app.get('title') + (title ? ' - ' + title: '');
-				
-		if ('string' === typeof v) {
-			if (/^\/.+/.test(v)) {
-				view = v.substr(1).split('/');
-			} else {
-				view = view.concat(v.split('/'));
-			}
-			
-			data = o;
-		} else {
-			data = v;
-		}
-		
-		data = merge(data || {}, res.locals);
-		
-		if (req.xhr) {
-			res.json({ data: data, view: view.join('.') });
-		} else {
-			data.state = JSON.stringify({ data: data, view: view.join('.') });
-			view[view.length - 1] = '_' + view[view.length - 1];
-			res.render(view.join('/'), data);
-		}
-	};
-	
-	next();
-});
-//Загружаем заголовок страници
-app.use(function loadPageTitle(req, res, next) {
-	res.locals.title = db.titles[req.path];
-	next();
-});
-
 app.use(app.router);
 app.use(function (req, res, next) {
 	next('not found');
@@ -101,6 +57,60 @@ app.use(express.errorHandler());
 
 
 //routes
+
+//Заменяем рендер
+app.all('*', function replaceRender(req, res, next) {
+	var render = res.render,
+		view = /^\/.+/.test(req.path) ? req.path.substr(1).split('/'): [];
+		
+	res.render = function(v, o) {
+		var data,
+			title = res.locals.title;
+		
+		res.render = render;
+		res.locals.title = app.get('title') + (title ? ' - ' + title: '');
+		//тут мы должны учесть что первым аргументом может придти
+		//имя шаблона					
+		if ('string' === typeof v) {
+			if (/^\/.+/.test(v)) {
+				view = v.substr(1).split('/');
+			} else {
+				view = view.concat(v.split('/'));
+			}
+			
+			data = o;
+		} else {
+			data = v;
+		}
+
+		//в res.locals располагаются дополнительные данные для рендринга
+		//Например такие как заголовок страницы (res.locals.title)
+		data = merge(data || {}, res.locals);
+		
+		if (req.xhr) {
+			//Если это аякс то отправляем json
+			res.json({ data: data, view: view.join('.') });
+		} else {
+			//Если это не аякс, то сохраняем текущее 
+			//состояние (понадобиться для инициализации history api)
+			data.state = JSON.stringify({ data: data, view: view.join('.') });
+            //И добавляем префикс к шаблону. Далее я расскажу для чего он нужен.
+			view[view.length - 1] = '_' + view[view.length - 1];
+			//Собственно сам рендер
+			res.render(view.join('/'), data);
+		}
+	};
+	
+	next();
+});
+
+
+//Загружаем заголовок страници
+app.all('*', function loadPageTitle(req, res, next) {
+	res.locals.title = db.titles[req.path];
+	next();
+});
+
 app.get('/', function(req, res){
 	res.render('index');
 });
