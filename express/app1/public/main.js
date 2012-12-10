@@ -6,10 +6,9 @@ var render = (function () {
 
 
 $(function () {
-	var isSupport = ($.browser.msi && /^[\d]{2,}[\d\.]+$/.test($.browser.version)) || $.browser.webkit || $.browser.mozilla,
-		initState;
+	var initState;
 	
-	if (isSupport) {
+	if (History.enabled) {
 		$('a').live('click', function () {
 			var el = $(this),
 				href = el.attr('href');

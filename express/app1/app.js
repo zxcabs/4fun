@@ -61,7 +61,7 @@ app.use(express.errorHandler());
 //Заменяем рендер
 app.all('*', function replaceRender(req, res, next) {
 	var render = res.render,
-		view = /^\/.+/.test(req.path) ? req.path.substr(1).split('/'): [];
+		view = req.path.length > 1 ? req.path.substr(1).split('/'): [];
 		
 	res.render = function(v, o) {
 		var data,
@@ -153,7 +153,7 @@ app.get('/templates', function(req, res) {
 			+	'"errors.notfound": (function(){ return ' + loadTemplate('/errors/notfound.jade')  + ' }())'
 			+ '};'
 
-	res.set({ 'Content-type': 'text/javascript' }).status(200).send(str);
+	res.set({ 'Content-type': 'text/javascript' }).send(str);
 });
 
 app.listen(3000);
