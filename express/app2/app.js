@@ -3,7 +3,7 @@ var express = require('express'),
 	fs = require('fs'),
 	app = express(),
 	viewOptions = { compileDebug: false, self: true },
-	User = require('./models/user.js'),
+	User = require('./models/user.js').User,
 	tools = require('./tools/index.js');
 
 //title

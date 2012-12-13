@@ -1,15 +1,7 @@
-var util = require('util');
+var util = require('util'),
+	db = require('./db.js'),
+	users = db.users;
 
-/*
- * Фэйковый файл бд
- */
-var users = [ 
-			{ id: 0, name: 'Jo', age: 20, sex: 'm' },
-			{ id: 1, name: 'Bo', age: 19, sex: 'm' },
-			{ id: 2, name: 'Le', age: 18, sex: 'w' },
-			{ id: 10, name: 'NotFound', age: 18, sex: 'w' }
-		];
-		
 /*
  * Модель пользователей
  */
@@ -38,10 +30,16 @@ function loadFromObj(obj) {
  * Ищем всех пользователей и возвращяем массив
  */
 User.find = function (fn) {
-	var i, l, list = new UserList();
-	
-	for (i = 0, l = users.length; l > i; i += 1) {
-		list.push(loadFromObj(users[i]));
+	var i, 
+		l = users.length,
+		list;
+
+	if (l) {
+		list = new UserList();
+		
+		for (i = 0, l; l > i; i += 1) {
+			list.push(loadFromObj(users[i]));
+		}
 	}
 	
 	fn(null, list);
@@ -116,4 +114,5 @@ UserList.prototype.toJSON = function () {
 };
  
  
-module.exports = User;
+exports.User = User;
+exports.UserList = UserList;
