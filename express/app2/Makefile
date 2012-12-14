@@ -13,10 +13,10 @@ test-cov: lib-cov
 		-R html-cov > coverage.html
 
 lib-cov: clear
-	@jscoverage --encoding=utf8 --no-highlight models models-cov
-	@find models-cov/*.js | xargs $(FIX_CHAR)
+	@jscoverage --encoding=utf8 --no-highlight lib lib-cov
+	@find lib-cov/*.js | xargs $(FIX_CHAR)
 
 clear:
-	rm -rf models-cov
+	@rm -rf lib-cov coverage.html
 	
 .PHONY: test test-cov clear
