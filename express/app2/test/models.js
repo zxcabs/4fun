@@ -1,18 +1,42 @@
 var should = require('should'),
-	db = require('../models/db.js'),
-	models = require('../models/user.js'),
+	db = process.env.COVERAGE
+			? require('../lib-cov/models/db.js')
+			: require('../lib/models/db.js'),
+	models = process.env.COVERAGE
+			? require('../lib-cov/models/user.js')
+			: require('../lib/models/user.js'),
 	User = models.User,
 	UserList = models.UserList;
 	
 describe('models', function () {
-	
+
+	//Эта функция будет один раз
+	//внутри этого блока "describe('models')"
+	before(function () {
+		db.regen();
+	});
+
 	//Тестируем модель User
-	describe('.User', function () {
+	describe('User', function () {
+
+		it('should be have #find', function () {
+			User.should.be.have.property('find');
+			User.find.should.be.a('function');
+		});
 		
-		//Эта функция будет вызываться на каждый `it`
-		//внутри этого блока "describe('.User')"
-		beforeEach(function () {
-			db.regen();
+		it('should be have #findById', function () {
+			User.should.be.have.property('findById');
+			User.findById.should.be.a('function');
+		});
+		
+		it('should be have #save', function () {
+			User.prototype.should.be.have.property('save');
+			User.prototype.save.should.be.a('function');
+		});
+		
+		it('should be have #toJSON', function () {
+			User.prototype.should.be.have.property('toJSON');
+			User.prototype.toJSON.should.be.a('function');
 		});
 		
 		describe('#find', function () {
@@ -29,7 +53,9 @@ describe('models', function () {
 				//Дропаем БД
 				db.drop();
 				
-				User.find(function (err, list) {					
+				User.find(function (err, list) {
+					//Восстанавливаем БД
+					db.generate();
 					if (err) return done(err);
 					should.not.exist(list);
 					done();
@@ -80,5 +106,12 @@ describe('models', function () {
 				});
 			});
 		});		
+	});
+	
+	describe('UserList', function () {
+		it('should be have #toJSON', function () {
+			UserList.prototype.should.be.have.property('toJSON');
+			UserList.prototype.toJSON.should.be.a('function');
+		});
 	});
 });

@@ -1,6 +1,14 @@
-var tools = require('../tools/index.js');
+var tools = process.env.COVERAGE
+			? require('../lib-cov/tools/index.js')
+			: require('../lib/tools/index.js');
 
 describe('tools', function () {
+	
+	it('should be have #merge', function () {
+		tools.should.be.have.property('merge');
+		tools.merge.should.be.a('function');
+	});
+	
 	describe('#merge', function () {
 		it('should merged', function () {
 			var a = { foo: '1' },
@@ -14,7 +22,10 @@ describe('tools', function () {
 				b = { bar: '2' };
 				
 			tools.merge(a, b);
-			a.should.eql({ foo: '1', bar: '2' });
+			//строгое сравнение по ссылке, убеждаемся что это 
+			//один и тот же объект
+			a.should.not.equal({ foo: '1', bar: '2' });
+			a.should.equal(a);
 		});
 		
 		it('should not be extended', function () {

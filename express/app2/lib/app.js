@@ -1,7 +1,7 @@
 var express = require('express'),
 	jade = require('jade'),
 	fs = require('fs'),
-	app = express(),
+	app = module.exports = express(),
 	viewOptions = { compileDebug: false, self: true },
 	User = require('./models/user.js').User,
 	tools = require('./tools/index.js');
@@ -13,12 +13,12 @@ var titles = {
 		};
 	
 //App settings	
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/../views');
 app.set('view engine', 'jade');
 app.set('title', 'Мой сайт');
 app.locals.compileDebug = viewOptions.compileDebug;
 app.locals.self = viewOptions.self;
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/../public'));
 app.use(app.router);
 app.use(function (req, res, next) {
 	next('not found');
@@ -142,14 +142,3 @@ app.get('/templates', function(req, res) {
 
 	res.set({ 'Content-type': 'text/javascript' }).send(str);
 });
-
-
-/*
- * Если файл подключен через require(), то экспортируем наше приложение
- * иначе запускаем сервер
- */
-if (module.parent) {
-	module.exports = app;
-} else {
-	app.listen(3000);
-}

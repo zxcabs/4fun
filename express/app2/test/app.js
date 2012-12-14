@@ -1,5 +1,7 @@
 var request = require('supertest'),
-	app = require('../app.js');
+	app = process.env.COVERAGE
+			? require('../lib-cov/app.js')
+			: require('../lib/app.js');
 	
 describe('Response html or json', function () {
 	//Если это обычный запрос, должны получить 
