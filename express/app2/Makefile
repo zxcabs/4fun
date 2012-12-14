@@ -3,13 +3,13 @@ MOCHA = ./node_modules/.bin/mocha
 
 test:
 	@NODE_ENV=test $(MOCHA) \
-		--require should \
+		-r should \
 		-R spec
 
 
 test-cov: lib-cov
 	@COVERAGE=1 $(MOCHA) \
-		--require should \
+		-r should \
 		-R html-cov > coverage.html
 
 lib-cov: clear
