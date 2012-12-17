@@ -1,11 +1,12 @@
 var util = require('util'),
 	db = require('./db.js'),
+	UserList = require('./userlist.js'),
 	users = db.users;
 
 /*
  * Модель пользователей
  */
-function User(opt) {
+var User = module.exports = function User(opt) {
 	this.id = users.length;
 	this.name = opt.name;
 	this.age = opt.age;
@@ -32,14 +33,10 @@ function loadFromObj(obj) {
 User.find = function (fn) {
 	var i, 
 		l = users.length,
-		list;
-
-	if (l) {
 		list = new UserList();
-		
-		for (i = 0, l; l > i; i += 1) {
-			list.push(loadFromObj(users[i]));
-		}
+
+	for (i = 0, l; l > i; i += 1) {
+		list.push(loadFromObj(users[i]));
 	}
 	
 	fn(null, list);
@@ -90,29 +87,3 @@ User.prototype.toJSON = function () {
 	
 	return json;
 };
-
-
-/*
- * UserList - Список пользователя, наследуем от Array
- */
-function UserList() {
-	Array.apply(this)
-}
-util.inherits(UserList, Array);
-
-
-UserList.prototype.toJSON = function () {
-	var i, 
-		l = this.length,
-		arr = new Array(l);
-	
-	for (i = 0; l > i; i += 1) {
-		arr[i] = this[i].toJSON();
-	}
-	
-	return arr;
-};
- 
- 
-exports.User = User;
-exports.UserList = UserList;

@@ -24,10 +24,11 @@ describe('Response html or json', function () {
 });
 
 describe('GET /', function () {
+
+	//Должен быть title === Мой сайт
 	it('should be included title', function (done) {
 		request(app)
 			.get('/')
-			.expect('Content-Type', /text\/html/)
 			.end(function (err, res) {
 				if (err) return done(err);
 				res.text.should.include('<title>Мой сайт</title>');
@@ -35,14 +36,13 @@ describe('GET /', function () {
 			});
 	});
 	
+	//Должен быть title === Мой сайт
 	it('should be included title', function (done) {
 		request(app)
 			.get('/')
 			.set('X-Requested-With', 'XMLHttpRequest')
-			.expect('Content-Type', /application\/json/)
 			.end(function (err, res) {
 				if (err) return done(err);
-				res.should.be.json;
 				res.body.should.have.property('data');
 				res.body.data.should.have.property('title', 'Мой сайт');
 				done();

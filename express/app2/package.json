@@ -7,7 +7,6 @@
 		"jade": "*",
 		"should": "*",
 		"mocha": "*",
-		"supertest": "*",
-		"fix-char": "https://github.com/zxcabs/fix-char/tarball/master"
+		"supertest": "*"
 	}
 }
