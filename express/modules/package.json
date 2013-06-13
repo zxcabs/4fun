@@ -1,0 +1,7 @@
+{
+	"name": "example",
+	"dependencies": {
+		"express": "3.2",
+		"jade": "*"
+	}
+}
