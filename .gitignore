@@ -1,4 +1,12 @@
-node_modules
+!/express/modules/node_modules/default_func
+!/express/modules/node_modules/modules
+
+/express/modules/node_modules/jade
+/express/modules/node_modules/express
+
+/express/app1/node_modules
+/express/app2/node_modules
+
 /express/app2/lib-cov
 /express/app2/coverage.html
 .idea

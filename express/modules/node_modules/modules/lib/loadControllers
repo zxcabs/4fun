@@ -1,0 +1,77 @@
+var fs = require('fs'),
+	p = require('path'),
+	express = require('express');
+
+module.exports = function loadControllers(parent, module, opt) {
+	var verbose = opt.verbose;
+	var controllersDir = p.resolve(module.dir, 'controllers');
+
+	fs.readdirSync(controllersDir).forEach(function (name) {
+		var conPath = p.join(controllersDir, name),
+			con = require(conPath),
+			name = con.name || name,
+			prefix = con.prefix || '',
+			engine = con.engine || parent.get('view engine'),
+			views = con.views || p.join(conPath, 'views'),
+			app = express(),
+			method,
+			path;
+
+		// allow specifying the view engine
+		app.set('view engine', engine);
+		app.set('views', views);
+
+		// before middleware support
+		if (con.before) {
+			path = '/' + name + '/:' + name + '_id';
+			app.all(path, con.before);
+			verbose && console.log('     ALL %s -> before', path);
+			path = '/' + name + '/:' + name + '_id/*';
+			app.all(path, con.before);
+			verbose && console.log('     ALL %s -> before', path);
+		}
+
+		// generate routes based
+		// on the exported methods
+		for (var key in con) {
+			// "reserved" exports
+			if (~['name', 'prefix', 'engine', 'before'].indexOf(key)) continue;
+			// route exports
+			switch (key) {
+				case 'show':
+					method = 'get';
+					path = '/' + name + '/:' + name + '_id/';
+					break;
+				case 'list':
+					method = 'get';
+					path = '/' + name + 's/';
+					break;
+				case 'edit':
+					method = 'get';
+					path = '/' + name + '/:' + name + '_id/edit';
+					break;
+				case 'update':
+					method = 'put';
+					path = '/' + name + '/:' + name + '_id/';
+					break;
+				case 'create':
+					method = 'post';
+					path = '/' + name;
+					break;
+				case 'index':
+					method = 'get';
+					path = ('index' === name) ? '/': '/' + name + '/';
+					break;
+				default:
+					throw new Error('unrecognized route: ' + name + '.' + key);
+			}
+
+			path = prefix + path;
+			app[method](path, con[key]);
+			verbose && console.log('     %s %s -> %s', method.toUpperCase(), path, key);
+		}
+
+		// mount the app
+		parent.use(app);
+	});
+}
