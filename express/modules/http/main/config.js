@@ -9,7 +9,9 @@ var express = require('express'),
 
 exports.engine = 'jade';
 exports.views = __dirname + '/views';
-exports.useBeforeController = [
+exports.strict_routing = true;
+
+exports.before = [
 	express.logger('dev'),
 	express.static(__dirname + '/public'),
 	express.cookieParser('some secret here'),
@@ -18,7 +20,7 @@ exports.useBeforeController = [
 	express.methodOverride()
 ];
 
-exports.useAfterController = [
+exports.after = [
    	deffunc.catchError,
 	deffunc.error404
 ];

@@ -20,9 +20,9 @@ function merge(a, b) {
 	return a;
 }
 
-function loadControllers(parent, opt) {
+function loadControllers(parent, module, opt) {
 	var verbose = opt.verbose;
-	var controllersDir = p.resolve(opt.__modroot, 'controllers');
+	var controllersDir = p.resolve(module.dir, 'controllers');
 
 	fs.readdirSync(controllersDir).forEach(function (name) {
 		var conPath = p.join(controllersDir, name),
@@ -62,7 +62,7 @@ function loadControllers(parent, opt) {
 					break;
 				case 'list':
 					method = 'get';
-					path = '/' + name + 's';
+					path = '/' + name + 's/';
 					break;
 				case 'edit':
 					method = 'get';
@@ -78,7 +78,7 @@ function loadControllers(parent, opt) {
 					break;
 				case 'index':
 					method = 'get';
-					path = ('index' === name)? '/': '/' + name;
+					path = ('index' === name) ? '/': '/' + name;
 					break;
 				default:
 					throw new Error('unrecognized route: ' + name + '.' + key);
@@ -94,40 +94,50 @@ function loadControllers(parent, opt) {
 	});
 }
 
-function run(name, opt) {
-	opt = opt || {};
-	opt.__root = opt.__root || p.resolve('.');
-	opt.__modroot = opt.__modroot || p.join(opt.__root, name);
+function loadModule(name, opt, parent) {
 
-	var verbose = opt.verbose;
+	var verbose = opt.verbose,
+		module = {},
+		app,
+		config, engine, views, before, after, submoddir,
+		root, strictRouting;
 
-	var app = express(),
-		mod = require(p.join(opt.__modroot, 'config')),
-		engine = mod.engine || 'jade',
-		views = mod.views,
-		before = mod.useBeforeController,
-		after = mod.useAfterController,
-		submod = p.join(opt.__modroot, 'modules');
 
 	verbose && console.log('\n load module: %s', name);
 
+	module.parent = parent;
+	module.name = name;
+	module.isRoot = !parent;
+	module.dir = parent && p.resolve(parent.dir, 'modules', name) || p.resolve(name);
+	module.submodule = [];
+
+
+	root = module.root = module.isRoot ? module: parent.root;
+	app = module.app = express();
+	config = module.config = require(p.join(module.dir, 'config'));
+	engine = config.engine = config.engine || (parent && parent.config.engine) || (root.config.engine || 'jade');
+	strictRouting = module.strict_routing = config.strict_routing || (parent && parent.config.strict_routing) || (root.config.strict_routing || false);
+	views = config.views = config.views || p.join(module.dir, 'views');
+	before = config.before;
+	after = config.after;
+
 	app.set('view engine', engine);
 	app.set('views', views);
+	app.set('strict routing', strictRouting);
 
 	if (before) before.forEach(function (fn) {
 		app.use(fn);
 	});
 
 	//loadControllers
-	loadControllers(app, opt);
+	loadControllers(app, module, opt);
 
+
+	submoddir = p.join(module.dir, 'modules');
 	//load submodule
-	if (fs.existsSync(submod)) {
-		fs.readdirSync(submod).forEach(function (subname) {
-			var n = opt.__parent ? p.join(opt.__parent, subname): subname,
-				newopt = merge({ __modroot: p.join(submod, subname), __parent: n }, opt);
-
-			app.use('/' + subname, run(n, newopt));
+	if (fs.existsSync(submoddir)) {
+		fs.readdirSync(submoddir).forEach(function (subname) {
+			app.use('/' + subname, loadModule(subname, opt, module));
 		});
 	}
 
@@ -136,4 +146,9 @@ function run(name, opt) {
 	});
 
 	return app;
+}
+
+function run(name, opt) {
+	opt = opt || {};
+	return loadModule(name, opt);
 };

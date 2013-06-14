@@ -9,20 +9,9 @@ var express = require('express'),
 
 exports.engine = 'jade';
 exports.views = __dirname + '/views';
-exports.useBeforeController = [
+exports.before = [
 	function (req, res, next) {
 		console.log('Admins!');
 		next();
-	},
-	express.logger('dev'),
-	express.static(__dirname + '/public'),
-	express.cookieParser('some secret here'),
-	express.session(),
-	express.bodyParser(),
-	express.methodOverride()
-];
-
-exports.useAfterController = [
-   	deffunc.catchError,
-	deffunc.error404
+	}
 ];
