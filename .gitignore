@@ -1,3 +1,4 @@
 node_modules
 /express/app2/lib-cov
 /express/app2/coverage.html
+.idea

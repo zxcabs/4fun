@@ -8,3 +8,8 @@
 exports.index = function userIndex(req, res, next) {
 	res.render('index');
 };
+
+exports.show = function userShow(req, res, next) {
+	var userId = req.params.user_id;
+	res.render('show', { userId: userId });
+};
