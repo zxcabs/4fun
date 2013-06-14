@@ -13,5 +13,6 @@ exports.before = [
 	function (req, res, next) {
 		console.log('Admins!');
 		next();
-	}
+	},
+	express.static(__dirname + '/public')
 ];

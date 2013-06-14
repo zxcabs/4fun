@@ -5,9 +5,9 @@
  *
  */
 
-var run = require('./run');
-var app = run('main', { verbose: true });
+var modules = require('modules');
+var module = modules('main', { verbose: true });
 
-app.listen(3333, function () {
+module.app.listen(3333, function () {
 	console.log('Application running');
 });
