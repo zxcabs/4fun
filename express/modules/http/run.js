@@ -58,11 +58,11 @@ function loadControllers(parent, module, opt) {
 			switch (key) {
 				case 'show':
 					method = 'get';
-					path = '/' + name + '/:' + name + '_id';
+					path = '/' + name + '/:' + name + '_id/';
 					break;
 				case 'list':
 					method = 'get';
-					path = '/' + name + 's/';
+					path = '/' + name + 's.:type/';
 					break;
 				case 'edit':
 					method = 'get';
@@ -70,7 +70,7 @@ function loadControllers(parent, module, opt) {
 					break;
 				case 'update':
 					method = 'put';
-					path = '/' + name + '/:' + name + '_id';
+					path = '/' + name + '/:' + name + '_id/';
 					break;
 				case 'create':
 					method = 'post';
@@ -78,7 +78,7 @@ function loadControllers(parent, module, opt) {
 					break;
 				case 'index':
 					method = 'get';
-					path = ('index' === name) ? '/': '/' + name;
+					path = ('index' === name) ? '/': '/' + name + '/';
 					break;
 				default:
 					throw new Error('unrecognized route: ' + name + '.' + key);
@@ -116,7 +116,7 @@ function loadModule(name, opt, parent) {
 	app = module.app = express();
 	config = module.config = require(p.join(module.dir, 'config'));
 	engine = config.engine = config.engine || (parent && parent.config.engine) || (root.config.engine || 'jade');
-	strictRouting = module.strict_routing = config.strict_routing || (parent && parent.config.strict_routing) || (root.config.strict_routing || false);
+	strictRouting = config.strict_routing = config.strict_routing || (parent && parent.config.strict_routing) || (root.config.strict_routing || false);
 	views = config.views = config.views || p.join(module.dir, 'views');
 	before = config.before;
 	after = config.after;
