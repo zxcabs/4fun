@@ -1,12 +1,12 @@
-!/express/modules/node_modules/default_func
-!/express/modules/node_modules/modules
+!/nodejs/express/modules/node_modules/default_func
+!/nodejs/express/modules/node_modules/modules
 
-/express/modules/node_modules/jade
-/express/modules/node_modules/express
+/nodejs/express/modules/node_modules/jade
+/nodejs/express/modules/node_modules/express
 
-/express/app1/node_modules
-/express/app2/node_modules
+/nodejs/express/app1/node_modules
+/nodejs/express/app2/node_modules
 
-/express/app2/lib-cov
-/express/app2/coverage.html
+/nodejs/express/app2/lib-cov
+/nodejs/express/app2/coverage.html
 .idea
