@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+	<script>
+		var el, req;
+
+		function log(msg) {
+			var mel = document.createElement('div');
+			mel.innerText = msg;
+
+			if (!el) el = document.getElementById('msg');
+			if (!el.firstChild) return el.appendChild(mel);
+			el.insertBefore(document.createElement('hr'), el.firstChild);
+			el.insertBefore(mel, el.firstChild);
+		}
+
+
+		function connect() {
+			req = new XMLHttpRequest();
+			req.open('GET', '/msg', true);
+			req.onreadystatechange = function () {
+				log(req.response);
+				req.response = '';
+				console.log('state: ' + req.readyState + '; msg: ' + req.response);
+			}
+			req.send(null);
+		}
+
+		function disconnect() {
+			req.abort();
+			req = null;
+		}
+
+		function cls() {
+			if (!el) el = document.getElementById('msg');
+			el.innerText = '';
+		}
+	</script>
+</head>
+<body>
+	<button onclick="connect()">connect</button>
+	<button onclick="disconnect()">disconnect</button>
+	<button onclick="cls()">clear</button>
+	<div id="msg"></div>
+</body>
+</html>
+
+
