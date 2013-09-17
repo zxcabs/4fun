@@ -10,3 +10,5 @@
 /nodejs/express/app2/lib-cov
 /nodejs/express/app2/coverage.html
 .idea
+
+node_modules

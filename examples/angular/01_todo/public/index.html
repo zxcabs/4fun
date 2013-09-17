@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>angulare - 01_todo</title>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="js/bower_components/angular/angular.js"></script>
+    <script src="js/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="js/service/tasks.js"></script>
+    <script src="js/controllers/list.js"></script>
+    <script src="js/controllers/main.js"></script>
+    <script src="js/TodoApp.js"></script>
+</head>
+<body>
+    <div ng-app="TodoApp">
+        <h1>Todo app</h1>
+        <div ng-controller="CMain">
+            <input ng-model="newTask.name">
+            <button ng-click="addTask()">Добавить</button>
+            <br>
+            <ul ng-controller="CList">
+                <li ng-repeat="item in items">
+                    <span>id: {{item.id}}; name: {{item.name}}</span>
+                    <span><a href="#" ng-click="delTask(item.id)">del</a></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+</html>
