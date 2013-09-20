@@ -5,7 +5,7 @@
  */
 
 
-var app = require('./lib/index.js');
+var app = require('./lib/app.js');
 
 app.listen(app.get('http_port'), function (err) {
     if (err) return console.error(err);
