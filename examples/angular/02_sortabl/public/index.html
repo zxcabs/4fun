@@ -2,10 +2,27 @@
 <html>
 <head>
     <title>02 angulare - sortable</title>
+    <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 
+    <div ng-app="Articles">
+        <div ng-controller="ArticleTable">
+            <p>{{ articles.length }}</p>
+            <table>
+                <tr ng-repeat="article in articles">
+                    <td>{{ article.id }} - {{ article.title }} - {{ article.text }}</td>
+                </tr>
+            </table>
+            <div id="getMore" ng-click="getMore()">get more</div>
+        </div>
+    </div>
+
+    <script src="js/bower_components/jquery/jquery.min.js"></script>
     <script src="js/bower_components/angular/angular.min.js"></script>
+    <script src="js/bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="js/service/articles.js"></script>
+    <script src="js/controllers/article.table.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

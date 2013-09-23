@@ -3,3 +3,5 @@
  * User: reznichenko
  *
  */
+
+var app = angular.module('Articles', ['ArticleTable']);
