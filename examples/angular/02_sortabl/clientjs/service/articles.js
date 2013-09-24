@@ -5,7 +5,7 @@
  */
 
 angular
-    .module('App.service.Articles', ['ngResource'])
+    .module('App.services', ['ngResource'])
     .factory('Articles', ['$resource', function ($resource) {
         return $resource('api/articles', {}, {
             query: {

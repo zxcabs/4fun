@@ -8,7 +8,7 @@
 require('../service/articles.js');
 
 angular
-    .module('ArticlesApp.controllers', ['App.service.Articles'])
+    .module('ArticlesApp.controllers', ['App.services'])
     .controller('ArticleTable', ['$scope', 'Articles', '$window', function($scope, Articles, $window) {
         $scope.articles = [];
         $scope.count = 10;
