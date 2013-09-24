@@ -9,7 +9,7 @@
     <div ng-app="Articles">
         <div ng-controller="ArticleTable">
             <p>{{ articles.length }}</p>
-            <table>
+            <table id="list">
                 <tr ng-repeat="article in articles">
                     <td>{{ article.id }} - {{ article.title }} - {{ article.text }}</td>
                 </tr>
