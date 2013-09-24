@@ -8,7 +8,11 @@ require('./controllers/article.table.js');
 
 angular
     .module('ArticlesApp', ['ngRoute', 'ArticlesApp.controllers'])
-    .config(['$routeProvider', function($routeProvider) {
+    .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+        $locationProvider
+            .html5Mode(true)
+            .hashPrefix('!');
+
         $routeProvider
             .when('/articles', { templateUrl: 'templates/articles.html', controller: 'ArticleTable' })
             .otherwise({ redirectTo: '/articles' });

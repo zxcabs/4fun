@@ -17,4 +17,8 @@ app.use(express.methodOverride());
 
 app.use('/api', require('./api.js'));
 
+app.use(function (req, res) {
+    res.redirect('/');
+});
+
 module.exports = app;
