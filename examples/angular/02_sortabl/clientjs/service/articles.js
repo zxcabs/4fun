@@ -11,7 +11,12 @@ angular
             query: {
                 method: 'get',
                 params: { count: 50, from: 0 },
-                isArray: false
+                transformResponse: function (data, header) {
+                    data = angular.fromJson(data);
+                    return data.articles;
+                },
+                isArray: true,
+                responseType: 'json'
             }
         });
     }]);

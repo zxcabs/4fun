@@ -4,11 +4,12 @@
  *
  */
 
+
+require('../service/articles.js');
+
 angular
-    .module('ArticleTable', [
-        'App.service.Articles'
-    ])
-    .controller('ArticleTable', ['$scope', 'Articles', '$window', function ($scope, Articles, $window) {
+    .module('ArticlesApp.controllers', ['App.service.Articles'])
+    .controller('ArticleTable', ['$scope', 'Articles', '$window', function($scope, Articles, $window) {
         $scope.articles = [];
         $scope.count = 10;
 
@@ -26,8 +27,8 @@ angular
         });
 
         $scope.getMore = function () {
-            Articles.query({ from: $scope.articles.length, count: $scope.count }, function (data) {
-                $scope.articles = $scope.articles.concat(data.articles);
+            Articles.query({ from: $scope.articles.length, count: $scope.count }, function (articles) {
+                $scope.articles = $scope.articles.concat(articles);
             });
         };
 

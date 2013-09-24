@@ -1,0 +1,7 @@
+<p>{{ articles.length }}</p>
+<table id="list">
+    <tr ng-repeat="article in articles">
+        <td>{{ article.id }} - {{ article.title }} - {{ article.text }}</td>
+    </tr>
+</table>
+<div id="getMore" ng-click="getMore()">get more</div>
