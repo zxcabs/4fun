@@ -6,9 +6,10 @@
  */
 
 require('./controllers/article.table.js');
+require('./directives/edit.js');
 
 angular
-    .module('ArticlesApp', ['ngRoute', 'ArticlesApp.controllers'])
+    .module('ArticlesApp', ['ngRoute', 'ArticlesApp.controllers', 'App.directives'])
     .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
         $locationProvider
             .html5Mode(true)
@@ -18,7 +19,7 @@ angular
             .when('/articles', { templateUrl: 'templates/articles.html', controller: 'ArticleTable' })
             .otherwise({ redirectTo: '/articles' });
     }]);
-},{"./controllers/article.table.js":2}],2:[function(require,module,exports){
+},{"./controllers/article.table.js":2,"./directives/edit.js":3}],2:[function(require,module,exports){
 /**
  * Created with JetBrains WebStorm.
  * User: reznichenko
@@ -55,7 +56,34 @@ angular
 
         $scope.getMore();
     }]);
-},{"../service/articles.js":3}],3:[function(require,module,exports){
+},{"../service/articles.js":4}],3:[function(require,module,exports){
+/**
+ * Project: 4fun
+ * File:
+ * User: Evgeny Reznichenko <kusakyky@gmail.com>
+ */
+
+
+
+angular
+    .module('App.directives', [])
+    .directive('edit', function () {
+        return {
+            replace: true,
+            scope: {
+                article: '=edit'
+            },
+            templateUrl: 'templates/articleEdit.html',
+            controller: function ($scope) {
+                var options = $scope.options = {};
+
+                $scope.show = function () {
+                    options.isShow = !options.isShow;
+                };
+            }
+        };
+    });
+},{}],4:[function(require,module,exports){
 /**
  * Created with JetBrains WebStorm.
  * User: reznichenko

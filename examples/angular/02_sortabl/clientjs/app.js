@@ -5,9 +5,10 @@
  */
 
 require('./controllers/article.table.js');
+require('./directives/edit.js');
 
 angular
-    .module('ArticlesApp', ['ngRoute', 'ArticlesApp.controllers'])
+    .module('ArticlesApp', ['ngRoute', 'ArticlesApp.controllers', 'App.directives'])
     .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
         $locationProvider
             .html5Mode(true)
