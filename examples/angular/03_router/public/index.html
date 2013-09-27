@@ -6,12 +6,15 @@
 <body ng-app="AppRouter">
     <div ng-controller="FirstCtrl">
         <div> First: {{ routeParams }}</div>
-        <a href="/gogo">/gogo</a>
+        <a href="/blabla/gogo">/gogo</a>
+
+        <div r-param param="routeParams"></div>
     </div>
+
     <div ng-view></div>
 
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="app.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/app.js"></script>
 </body>
 </html>
