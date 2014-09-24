@@ -1,0 +1,43 @@
+{
+    "name": "StarWar",
+    "description": "StarWar",
+
+
+    "root": "../",
+
+    "optimize": false,
+
+    "output": "www/app/index.js",
+
+    "modules": {
+        "bundle-game": "@app/index.game.js",
+        "bundle-vendors": "@app/index.vendors.js",
+        "index": "app/index.js"
+    },
+
+    "bundles": {
+        "game": {
+            "modules": {
+                "<%= dir[0] %>/<%= file %>": "app/game/*.{js,html}",
+                "<%= dir[1] %>/<%= dir[0] %>/<%= file %>": "app/game/objects/*.{js,html}"
+            }
+        },
+        "vendors": "../app/vendors/vendors.lmd.json"
+    },
+
+    "depends": "../app/lib/lib.lmd.json",
+
+    "pack": false,
+
+    "main": "index",
+
+    "log": true,
+    "warn": true,
+
+    "js": true,
+    "css": true,
+
+    "promise": "lib/defer",
+
+    "shortcuts": true
+}

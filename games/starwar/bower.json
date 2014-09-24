@@ -1,0 +1,16 @@
+{
+  "name": "tanks",
+  "version": "0.0.0",
+  "homepage": "https://github.com/zxcabs/4fun",
+  "authors": [
+    "Evgeny Reznichenko <kusakyky@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
